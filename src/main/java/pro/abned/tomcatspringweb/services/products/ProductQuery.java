@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import pro.abned.tomcatspringweb.entities.Product;
 import pro.abned.tomcatspringweb.repositories.ProductRepository;
 
+import java.util.List;
+
 @Service
 public class ProductQuery {
     private final ProductRepository productRepository;
@@ -20,5 +22,9 @@ public class ProductQuery {
         }
 
         return productOpts.get();
+    }
+
+    public List<Product> getAll() {
+        return productRepository.findAll();
     }
 }

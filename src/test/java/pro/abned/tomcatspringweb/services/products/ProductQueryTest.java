@@ -6,6 +6,8 @@ import org.mockito.ArgumentCaptor;
 import pro.abned.tomcatspringweb.entities.Product;
 import pro.abned.tomcatspringweb.repositories.ProductRepository;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,7 +25,7 @@ class ProductQueryTest {
     }
 
     @Test
-    void testCreate() {
+    void testGetProduct() {
         Product result = new Product();
         result.setId(1L);
 
@@ -37,5 +39,19 @@ class ProductQueryTest {
         assertThat(product).isEqualTo(result);
 
         assertThat(getCapture.getValue()).isEqualTo(1);
+    }
+
+    @Test
+    void testGetAll() {
+        Product result = new Product();
+        result.setId(1L);
+
+        when(productRepository.findAll()).thenReturn(List.of(result));
+
+        List<Product> products = productQuery.getAll();
+
+        verify(productRepository, times(1)).findAll();
+
+        assertThat(products).hasSize(1);
     }
 }

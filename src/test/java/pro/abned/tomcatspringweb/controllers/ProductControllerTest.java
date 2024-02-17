@@ -36,7 +36,6 @@ class ProductControllerTest {
     void testGetById() {
         ResponseEntity<String> getResponse = restTemplate.getForEntity("/api/v1/products/1", String.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        System.out.println(getResponse.getBody());
         DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
         Number id = documentContext.read("$.id");
         Double price = documentContext.read("$.price");
@@ -89,5 +88,35 @@ class ProductControllerTest {
         assertThat(ean).isEqualTo(productForm.getEan());
         assertThat(name).isEqualTo(productForm.getName());
         assertThat(description).isEqualTo(productForm.getDescription());
+    }
+
+    @Test
+    void testGetAll() {
+        ResponseEntity<String> getResponse = restTemplate.getForEntity("/api/v1/products", String.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
+
+        Integer count = documentContext.read("$.length()");
+        assertThat(count).isGreaterThanOrEqualTo(1);
+
+        Number id = documentContext.read("$[0].id");
+        Double price = documentContext.read("$[0].price");
+        Double quantity = documentContext.read("$[0].quantity");
+        Double weight = documentContext.read("$[0].weight");
+        Double volume = documentContext.read("$[0].volume");
+        String code = documentContext.read("$[0].code");
+        String ean = documentContext.read("$[0].ean");
+        String name = documentContext.read("$[0].name");
+        String description = documentContext.read("$[0].description");
+
+        assertThat(id).isNotNull();
+        assertThat(price).isEqualTo(23.99);
+        assertThat(quantity).isEqualTo(20.0);
+        assertThat(weight).isEqualTo(0.3);
+        assertThat(volume).isEqualTo(0);
+        assertThat(code).isEqualTo("P0000");
+        assertThat(ean).isEqualTo("123456789000");
+        assertThat(name).isEqualTo("Product Mocked Test");
+        assertThat(description).isEqualTo("Product Mocked Description Test");
     }
 }

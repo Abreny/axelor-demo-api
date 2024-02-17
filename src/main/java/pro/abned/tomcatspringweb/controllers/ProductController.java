@@ -10,9 +10,11 @@ import pro.abned.tomcatspringweb.services.products.ProductAction;
 import pro.abned.tomcatspringweb.services.products.ProductQuery;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1")
+@CrossOrigin()
 public class ProductController {
     private final ProductAction productAction;
     private final ProductQuery productQuery;
@@ -20,6 +22,11 @@ public class ProductController {
     public ProductController(ProductAction productAction, ProductQuery productQuery) {
         this.productAction = productAction;
         this.productQuery = productQuery;
+    }
+
+    @GetMapping("products")
+    public List<Product> getAllProducts() {
+        return productQuery.getAll();
     }
 
     @PostMapping("products")
