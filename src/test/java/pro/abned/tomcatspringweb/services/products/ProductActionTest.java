@@ -3,6 +3,7 @@ package pro.abned.tomcatspringweb.services.products;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import pro.abned.tomcatspringweb.commons.AttributeCopyManager;
 import pro.abned.tomcatspringweb.dtos.forms.ProductForm;
 import pro.abned.tomcatspringweb.entities.Product;
 import pro.abned.tomcatspringweb.repositories.ProductRepository;
@@ -51,6 +52,10 @@ public class ProductActionTest {
 
         Product createParams = createCapture.getValue();
         assertThat(createParams.getId()).isNull();
+        assertEqualProduct(createParams, productForm);
+    }
+
+    private static void assertEqualProduct(Product createParams, ProductForm productForm) {
         assertThat(createParams.getCode()).isEqualTo(productForm.getCode());
         assertThat(createParams.getName()).isEqualTo(productForm.getName());
         assertThat(createParams.getEan()).isEqualTo(productForm.getEan());
@@ -59,5 +64,28 @@ public class ProductActionTest {
         assertThat(createParams.getWeight()).isEqualTo(productForm.getWeight());
         assertThat(createParams.getDescription()).isEqualTo(productForm.getDescription());
         assertThat(createParams.getQuantity()).isEqualTo(productForm.getQuantity());
+    }
+
+    @Test
+    void testCreateOrUpdate() {
+        ProductForm productForm = getProductForm("Product Name Product Action Create Test");
+
+        Product product = new Product();
+        product.setId(1L);
+        AttributeCopyManager.copyNotNull(productForm, product);
+
+        when(productRepository.save(any())).thenReturn(product);
+
+        Product created = productAction.createOrUpdate(product);
+
+        ArgumentCaptor<Product> createCapture = ArgumentCaptor.forClass(Product.class);
+        verify(productRepository, times(1)).save(createCapture.capture());
+        verify(productRepository, times(1)).findById(eq(1L));
+
+        assertThat(created).isEqualTo(product);
+
+        Product createParams = createCapture.getValue();
+        assertThat(createParams.getId()).isEqualTo(1L);
+        assertEqualProduct(createParams, productForm);
     }
 }

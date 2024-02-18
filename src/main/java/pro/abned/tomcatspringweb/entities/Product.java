@@ -33,4 +33,6 @@ public class Product {
     private Double weight;
 
     private Double volume;
+
+    private Long erpProductId;
 }

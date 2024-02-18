@@ -21,4 +21,33 @@ public class ProductAction {
 
         return productRepository.save(toCreate);
     }
+
+    public Product update(Long productId, ProductForm productForm) {
+        final var toUpdate = _validate(productId);
+
+        AttributeCopyManager.copyNotNull(productForm, toUpdate);
+
+        return productRepository.save(toUpdate);
+    }
+
+    public Product createOrUpdate(Product product) {
+        Product prod = null;
+        if (product.getId() != null) {
+            prod = productRepository.findById(product.getId()).orElse(null);
+        }
+        if (product.getErpProductId() != null) {
+            prod = productRepository.findOneByErpProductId(product.getErpProductId()).orElse(null);
+        }
+        if (prod == null) {
+            return productRepository.save(product);
+        }
+
+        AttributeCopyManager.copyNotNull(product, prod);
+
+        return productRepository.save(prod);
+    }
+
+    private Product _validate(Long id) {
+        return productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("product.get.not_found#" + id));
+    }
 }
