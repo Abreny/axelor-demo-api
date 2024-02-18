@@ -3,6 +3,8 @@ package pro.abned.tomcatspringweb.axelors;
 import lombok.Getter;
 import org.springframework.web.client.RestTemplate;
 import pro.abned.tomcatspringweb.axelors.auths.AxelorLogin;
+import pro.abned.tomcatspringweb.axelors.orders.AxelorCreateOrder;
+import pro.abned.tomcatspringweb.axelors.orders.AxelorCreateOrderLine;
 import pro.abned.tomcatspringweb.axelors.products.AxelorGetProduct;
 import pro.abned.tomcatspringweb.axelors.products.AxelorGetProductStock;
 import pro.abned.tomcatspringweb.axelors.rest.SessionManager;
@@ -17,6 +19,9 @@ public class AxelorManager {
     private AxelorLogin login;
     private AxelorGetProduct getProduct;
     private AxelorGetProductStock getProductStock;
+
+    private AxelorCreateOrder createOrder;
+    private AxelorCreateOrderLine createOrderLine;
 
     public AxelorManager(RestTemplate restTemplate, AxelorSetting axelorSetting) {
         this.restTemplate = restTemplate;
@@ -51,5 +56,19 @@ public class AxelorManager {
             getProductStock = new AxelorGetProductStock(this);
         }
         return getProductStock;
+    }
+
+    public AxelorCreateOrder createOrder() {
+        if (createOrder == null) {
+            createOrder = new AxelorCreateOrder(this);
+        }
+        return createOrder;
+    }
+
+    public AxelorCreateOrderLine createOrderLine() {
+        if (createOrderLine == null) {
+            createOrderLine = new AxelorCreateOrderLine(this);
+        }
+        return createOrderLine;
     }
 }

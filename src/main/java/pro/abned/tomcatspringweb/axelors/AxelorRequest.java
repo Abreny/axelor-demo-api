@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
+import pro.abned.tomcatspringweb.axelors.rest.request_type.AxelorCreate;
 import pro.abned.tomcatspringweb.axelors.rest.request_type.AxelorRequestable;
 import pro.abned.tomcatspringweb.axelors.rest.request_type.AxelorSearch;
 import pro.abned.tomcatspringweb.axelors.rest.request_type.AxelorVersion;
@@ -24,6 +25,10 @@ public abstract class AxelorRequest<T> {
 
     public AxelorModelResponse<T> get(int version) {
         return _retryRequest(new AxelorVersion(version, _getPath(), axelorManager));
+    }
+
+    public AxelorModelResponse<T> create(Object data) {
+        return _retryRequest(new AxelorCreate(data, _getPath(), axelorManager));
     }
 
     private AxelorModelResponse<T> _retryRequest(AxelorRequestable requestable) {

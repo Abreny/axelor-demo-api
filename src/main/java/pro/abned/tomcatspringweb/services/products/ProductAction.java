@@ -1,5 +1,6 @@
 package pro.abned.tomcatspringweb.services.products;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import pro.abned.tomcatspringweb.commons.AttributeCopyManager;
 import pro.abned.tomcatspringweb.dtos.forms.ProductForm;
@@ -30,6 +31,7 @@ public class ProductAction {
         return productRepository.save(toUpdate);
     }
 
+    @Transactional
     public Product createOrUpdate(Product product) {
         Product prod = null;
         if (product.getId() != null) {
