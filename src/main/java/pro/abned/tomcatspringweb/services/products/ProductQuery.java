@@ -1,5 +1,6 @@
 package pro.abned.tomcatspringweb.services.products;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import pro.abned.tomcatspringweb.entities.Product;
 import pro.abned.tomcatspringweb.repositories.ProductRepository;
@@ -24,7 +25,8 @@ public class ProductQuery {
         return productOpts.get();
     }
 
+    @Transactional
     public List<Product> getAll() {
-        return productRepository.findAll();
+        return productRepository.findByOrderByIdAsc();
     }
 }
